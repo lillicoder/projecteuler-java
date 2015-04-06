@@ -1,16 +1,20 @@
 Project Euler - Java Edition
+============================
 
-This repository contains my work for Project Euler (www.projecteuler.net) problems as I work them. I will update this repository periodically
-as I have time to work on Project Euler.
+This repository contains my work for Project Euler (www.projecteuler.net) 
+problems as I work them. I will update this repository periodically as I have 
+time to work on Project Euler.
 
-The work on these problems will be my own and are not guaranteed to be optimal. Also, while Apache licensed, please don't sell
-or use this work to cheat on your own progress for Project Euler (you'd be missing the point of PE if you did).
+The work on these problems will be my own and are not guaranteed to be 
+optimal. Also, while Apache licensed, please don't sell or use this work to 
+cheat on your own progress for Project Euler (you'd be missing the point of PE 
+if you did).
 
-All work for this repository will be done in Java 8 (so shiny!).
+All work for this repository will be done targeting Java 8.
 
 --License--
 
-Copyright 2014 Scott Weeden-Moody
+Copyright 2015 Scott Weeden-Moody
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this project except in compliance with the License.
