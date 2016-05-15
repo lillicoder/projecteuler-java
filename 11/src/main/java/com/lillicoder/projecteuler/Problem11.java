@@ -61,7 +61,7 @@ public class Problem11 {
         /**
          * Create the grid.
          */
-        int[][] grid = new int[][] {
+        Integer[][] input = new Integer[][] {
             { 8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8 },
             { 49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 4, 56, 62, 0 },
             { 81, 49, 31, 73, 55, 79, 14, 29, 93, 71, 40, 67, 53, 88, 30, 3, 49, 13, 36, 65 },
@@ -84,13 +84,15 @@ public class Problem11 {
             { 1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48}
         };
 
+        Grid<Integer> grid = new Grid<Integer>(input);
+
         final int termsToConsider = 4;
 
         int[] largestProductTerms = null;
         double largestProduct = 0;
 
-        for (int row = 0; row < grid.length; row++) {
-            for (int column = 0; column < grid[row].length; column++) {
+        for (int row = 0; row < grid.rowCount(); row++) {
+            for (int column = 0; column < grid.columnCount(); column++) {
                 // Get max terms in each direction from the current grid item
                 int[] terms = radial(grid, row, column, termsToConsider);
                 double product = computeProduct(terms);
@@ -116,77 +118,8 @@ public class Problem11 {
      * @param length Number of terms to consider.
      * @return Largest set of terms.
      */
-    private static int[] radial(int[][] grid, int row, int column, int length) {
-        int[] terms = up(grid, row, column, length);
-        terms = upRight(grid, row, column, length);
-        terms = right(grid, row, column, length);
-        terms = downRight(grid, row, column, length);
-        terms = down(grid, row, column, length);
-        terms = downLeft(grid, row, column, length);
-        terms = left(grid, row, column, length);
-        terms = upLeft(grid, row, column, length);
-    }
-
-    private static int[] down(int [][] grid, int row, int column, int length) {
-        if (grid.length - length  < 0) {
-            System.out.println("DEBUG: Skipping position, length exceeds terms in down direction. " +
-                                       "[row = " + row + ", column = " + column + ". length = " + length + "]");
-            return null;
-        }
-
-        int[] terms = new int[length];
-        for (int position = 0; position < length; position++) {
-            terms[position] = grid[row + position][column];
-        }
-
-        return terms;
-    }
-
-    private static int[] up(int[][] grid, int row, int column, int length) {
-        int alignedRow = row + 1; // Row is 0-based and length is not, add 1 to compensate
-        if (alignedRow - length  < 0) {
-            System.out.println("DEBUG: Skipping position, length exceeds terms in up direction. " +
-                               "[row = " + row + ", column = " + column + ". length = " + length + "]");
-            return null;
-        }
-
-        int[] terms = new int[length];
-        for (int position = 0; position < length; position++) {
-            terms[position] = grid[row - position][column];
-        }
-
-        return terms;
-    }
-
-    private static int[] left(int[][] grid, int row, int column, int length) {
-        int alignedColumn = column + 1; // Column is 0-based and length is not, add 1 to compensate
-        if (alignedColumn - length < 0) {
-            System.out.println("DEBUG: Skipping position, length exceeds terms in left direction. " +
-                                       "[row = " + row + ", column = " + column + ". length = " + length + "]");
-            return null;
-        }
-
-        int[] terms = new int[length];
-        for (int position = 0; position < length; position++) {
-            terms[position] = grid[row][column - position];
-        }
-
-        return terms;
-    }
-
-    private static int[] right(int[][] grid, int row, int column, int length) {
-        if (grid[row].length - length < 0) {
-            System.out.println("DEBUG: Skipping position, length exceeds terms in right direction. " +
-                                       "[row = " + row + ", column = " + column + ". length = " + length + "]");
-            return null;
-        }
-
-        int[] terms = new int[length];
-        for (int position = 0; position < length; position++) {
-            terms[position] = grid[row][column + position];
-        }
-
-        return terms;
+    private static int[] radial(Grid<?> grid, int row, int column, int length) {
+        // TODO Find biggest terms for the given position
     }
 
     /**
