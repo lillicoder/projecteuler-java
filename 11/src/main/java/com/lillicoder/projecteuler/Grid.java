@@ -44,6 +44,10 @@ class Grid<T> {
     private final T[][] grid;
 
     Grid(T[][] grid) {
+        if (grid == null) {
+            throw new IllegalArgumentException("Cannot instantiate a grid with a null array.");
+        }
+
         this.grid = grid;
     }
 
@@ -75,32 +79,23 @@ class Grid<T> {
         switch (direction) {
             case UP:
                 return up(row, column, length);
-                break;
             case DOWN:
                 return down(row, column, length);
-                break;
             case LEFT:
                 return left(row, column, length);
-                break;
             case RIGHT:
                 return right(row, column, length);
-                break;
             case UP_LEFT:
                 return upLeft(row, column, length);
-                break;
             case UP_RIGHT:
                 return upRight(row, column, length);
-                break;
             case DOWN_LEFT:
                 return downLeft(row, column, length);
-                break;
             case DOWN_RIGHT:
                 return downRight(row, column, length);
-                break;
             default:
                 throw new IllegalArgumentException("Unknown direction type, cannot get nodes. " +
                                                            "[direction = " + direction + "]");
-                break;
         }
     }
 

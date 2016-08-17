@@ -16,9 +16,9 @@
 
 package com.lillicoder.projecteuler;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Project Euler - Problem #11
@@ -84,17 +84,16 @@ public class Problem11 {
             { 1, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 1, 89, 19, 67, 48}
         };
 
-        Grid<Integer> grid = new Grid<Integer>(input);
+        final Grid<Integer> grid = new Grid<>(input);
+        final int termsLength = 4;
 
-        final int termsToConsider = 4;
-
-        int[] largestProductTerms = null;
+        List<Integer> largestProductTerms = null;
         double largestProduct = 0;
 
         for (int row = 0; row < grid.rowCount(); row++) {
             for (int column = 0; column < grid.columnCount(); column++) {
                 // Get max terms in each direction from the current grid item
-                int[] terms = radial(grid, row, column, termsToConsider);
+                List<Integer> terms = getLargestTerms(grid, row, column, termsLength);
                 double product = computeProduct(terms);
                 if (product > largestProduct) {
                     largestProductTerms = terms;
@@ -103,23 +102,75 @@ public class Problem11 {
             }
         }
 
-        if (largestProductTerms == null || largestProductTerms.length == 0) {
+        if (largestProductTerms == null || largestProductTerms.isEmpty()) {
             System.out.println("Didn't find any product terms during the search.");
         } else {
-            System.out.println("Largets product: " + largestProduct + ", terms: " + largestProductTerms);
+            System.out.println("Largest product: " + largestProduct + ", terms: " + largestProductTerms);
         }
     }
 
     /**
-     * Gets the largest set of terms in any direction rom the given row and column position for the given grid.
+     * Gets the largest set of terms in any direction from the node at the given row and column position
+     * for the given grid.
      * @param grid Grid to search.
      * @param row Row position.
      * @param column Column position.
      * @param length Number of terms to consider.
      * @return Largest set of terms.
      */
-    private static int[] radial(Grid<?> grid, int row, int column, int length) {
-        // TODO Find biggest terms for the given position
+    private static List<Integer> getLargestTerms(Grid<Integer> grid, int row, int column, int length) {
+        // TODO Rewrite with a loop
+        List<Integer> terms = grid.get(row, column, Grid.Direction.UP, length);
+        Collections.sort(terms);
+
+        List<Integer> nextTerms = grid.get(row, column, Grid.Direction.DOWN, length);
+        Collections.sort(nextTerms);
+
+        terms = getLargest(terms, nextTerms);
+
+        nextTerms = grid.get(row, column, Grid.Direction.LEFT, length);
+        terms = getLargest(terms, nextTerms);
+
+        nextTerms = grid.get(row, column, Grid.Direction.RIGHT, length);
+        terms = getLargest(terms, nextTerms);
+
+        nextTerms = grid.get(row, column, Grid.Direction.UP_LEFT, length);
+        terms = getLargest(terms, nextTerms);
+
+        nextTerms = grid.get(row, column, Grid.Direction.UP_RIGHT, length);
+        terms = getLargest(terms, nextTerms);
+
+        nextTerms = grid.get(row, column, Grid.Direction.DOWN_LEFT, length);
+        terms = getLargest(terms, nextTerms);
+
+        nextTerms = grid.get(row, column, Grid.Direction.DOWN_RIGHT, length);
+        terms = getLargest(terms, nextTerms);
+
+        return terms;
+    }
+
+    /**
+     * Determines which of the given lists of integers has larger terms than the other. Data in the
+     * list is normalized when comparing.
+     * @param a First list.
+     * @param b Second list.
+     * @return Largest list.
+     */
+    private static List<Integer> getLargest(List<Integer> a, List<Integer> b) {
+        if (a == null || b == null) {
+            throw new IllegalArgumentException("Cannot get largest list of integers with a null list.");
+        }
+
+        Collections.sort(a);
+        Collections.sort(b);
+
+        String first = a.stream().map(Object:: toString).collect(Collectors.joining());
+        String second = b.stream().map(Object:: toString).collect(Collectors.joining());
+        if (first.compareTo(second) >= 0) {
+            return a;
+        } else {
+            return b;
+        }
     }
 
     /**
@@ -127,13 +178,14 @@ public class Problem11 {
      * @param terms Terms to compute product of.
      * @return Product of terms.
      */
-    private static double computeProduct(int[] terms) {
-        if (terms == null || terms.length == 0) {
-            throw new IllegalArgumentException("Cannot compute terms for a null or empty array.");
+    private static double computeProduct(List<Integer> terms) {
+        if (terms == null || terms.isEmpty()) {
+            throw new IllegalArgumentException("Cannot compute terms for a null or empty list.");
         }
 
-        // New terms, sort and compute product
-        Arrays.sort(terms);
+        if (terms.contains(null)) {
+            throw new IllegalArgumentException("Terms list has a null element, cannot compute.");
+        }
 
         double product = 1;
         for (int term : terms) {
