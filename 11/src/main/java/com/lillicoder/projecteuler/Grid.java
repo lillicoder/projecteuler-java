@@ -135,7 +135,7 @@ class Grid<T> {
 
         for (int position = 0; position < length; position++) {
             int currentRow = row + position;
-            if (currentRow > rowCount) {
+            if (currentRow >= rowCount) {
                 break;
             }
 
@@ -182,7 +182,7 @@ class Grid<T> {
 
         for (int position = 0; position < length; position++) {
             int currentColumn = column + position;
-            if (currentColumn > columnCount) {
+            if (currentColumn >= columnCount) {
                 break;
             }
 
@@ -233,7 +233,7 @@ class Grid<T> {
             int currentRow = row - position;
             int currentColumn = column + position;
 
-            if (currentRow < 0 || currentColumn > columnCount) {
+            if (currentRow < 0 || currentColumn >= columnCount) {
                 break;
             }
 
@@ -259,7 +259,7 @@ class Grid<T> {
             int currentRow = row + position;
             int currentColumn = column - position;
 
-            if (currentRow > rowCount || currentColumn < 0) {
+            if (currentRow >= rowCount || currentColumn < 0) {
                 break;
             }
 
@@ -286,7 +286,7 @@ class Grid<T> {
             int currentRow = row + position;
             int currentColumn = column + position;
 
-            if (currentRow > rowCount || currentColumn > columnCount) {
+            if (currentRow >= rowCount || currentColumn >= columnCount) {
                 break;
             }
 
