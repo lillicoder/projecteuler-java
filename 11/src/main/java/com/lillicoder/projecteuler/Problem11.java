@@ -58,9 +58,6 @@ import java.util.stream.Collectors;
 public class Problem11 {
 
     public static void main(String[] args) {
-        /**
-         * Create the grid.
-         */
         Integer[][] input = new Integer[][] {
             { 8, 2, 22, 97, 38, 15, 0, 40, 0, 75, 4, 5, 7, 78, 52, 12, 50, 77, 91, 8 },
             { 49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 4, 56, 62, 0 },
@@ -105,7 +102,7 @@ public class Problem11 {
         if (largestProductTerms == null || largestProductTerms.isEmpty()) {
             System.out.println("Didn't find any product terms during the search.");
         } else {
-            System.out.println("Largest product: " + largestProduct + ", terms: " + largestProductTerms);
+            System.out.printf("Largest product: %f, terms: " + largestProductTerms, largestProduct);
         }
     }
 
@@ -119,32 +116,11 @@ public class Problem11 {
      * @return Largest set of terms.
      */
     private static List<Integer> getLargestTerms(Grid<Integer> grid, int row, int column, int length) {
-        // TODO Rewrite with a loop
-        List<Integer> terms = grid.get(row, column, Grid.Direction.UP, length);
-        Collections.sort(terms);
-
-        List<Integer> nextTerms = grid.get(row, column, Grid.Direction.DOWN, length);
-        Collections.sort(nextTerms);
-
-        terms = getLargest(terms, nextTerms);
-
-        nextTerms = grid.get(row, column, Grid.Direction.LEFT, length);
-        terms = getLargest(terms, nextTerms);
-
-        nextTerms = grid.get(row, column, Grid.Direction.RIGHT, length);
-        terms = getLargest(terms, nextTerms);
-
-        nextTerms = grid.get(row, column, Grid.Direction.UP_LEFT, length);
-        terms = getLargest(terms, nextTerms);
-
-        nextTerms = grid.get(row, column, Grid.Direction.UP_RIGHT, length);
-        terms = getLargest(terms, nextTerms);
-
-        nextTerms = grid.get(row, column, Grid.Direction.DOWN_LEFT, length);
-        terms = getLargest(terms, nextTerms);
-
-        nextTerms = grid.get(row, column, Grid.Direction.DOWN_RIGHT, length);
-        terms = getLargest(terms, nextTerms);
+        List<Integer> terms = null;
+        for (Grid.Direction direction : Grid.Direction.values()) {
+            List<Integer> nextTerms = grid.get(row, column, direction, length);
+            terms = getLargest(terms, nextTerms);
+        }
 
         return terms;
     }
@@ -157,16 +133,22 @@ public class Problem11 {
      * @return Largest list.
      */
     private static List<Integer> getLargest(List<Integer> a, List<Integer> b) {
-        if (a == null || b == null) {
-            throw new IllegalArgumentException("Cannot get largest list of integers with a null list.");
+        if (a == null && b == null) {
+            throw new IllegalArgumentException("Cannot get largest list of integers with two null list.");
+        } else if (a == null) {
+            return b;
+        } else if (b == null) {
+            return a;
         }
 
+        // Normalize orders by sorting first
         Collections.sort(a);
         Collections.sort(b);
 
-        String first = a.stream().map(Object:: toString).collect(Collectors.joining());
-        String second = b.stream().map(Object:: toString).collect(Collectors.joining());
-        if (first.compareTo(second) >= 0) {
+        // Map each element to a string, then collect it into a single string, the parse the integer for comparison
+        int first = Integer.parseInt(a.stream().map(Object:: toString).collect(Collectors.joining()));
+        int second = Integer.parseInt(b.stream().map(Object:: toString).collect(Collectors.joining()));
+        if (Integer.compare(first, second) >= 0) {
             return a;
         } else {
             return b;
