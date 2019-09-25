@@ -16,8 +16,6 @@
 
 package com.lillicoder.projecteuler;
 
-import sun.security.util.BigInt;
-
 import java.math.BigInteger;
 
 /**
